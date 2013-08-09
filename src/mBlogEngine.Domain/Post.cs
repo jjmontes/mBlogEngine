@@ -2,15 +2,42 @@
 {
     public class Post
     {
-		public Post(string title)
+	    private readonly Blog _blog;
+
+	    public Post(Blog blog)
 	    {
-		    Title = title;
+		    _blog = blog;
 	    }
 
-	    public string Title { get; set; }
+	    public string Title { get; private set; }
 		
-		public string Text { get; set; }
+		public string Text { get; private set; }
 
-	    public string Summary { get; set; }
+	    public string Summary { get; private set; }
+
+		public bool Published { get; private set; }
+
+	    public Post SetTitle(string title)
+	    {
+		    Title = title;
+		    return this;
+	    }
+
+	    public Post SetText(string text)
+	    {
+		    Text = text;
+		    return this;
+	    }
+
+	    public Post SetSummary(string summary)
+	    {
+		    Summary = summary;
+		    return this;
+	    }
+
+	    public void Publish()
+	    {
+		    Published = true;
+	    }
     }
 }

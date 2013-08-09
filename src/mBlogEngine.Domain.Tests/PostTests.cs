@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 
 namespace mBlogEngine.Domain.Tests
 {
@@ -6,13 +7,30 @@ namespace mBlogEngine.Domain.Tests
     public class PostTests
     {
 		[Test]
-		public void CrearUnPostBasico()
+		public void CreateBasicPost()
 		{
-			var post = new Post("Título") {Text = "Primer post"};
+			var blog = new Blog();
+			var post = blog.NewPost()
+			               .SetTitle("Título")
+			               .SetText("Primer post");
 
 			Assert.AreEqual("Título", post.Title);
 			Assert.AreEqual("Primer post", post.Text);
 			Assert.AreEqual(null, post.Summary);
+		}
+
+		[Test]
+		public void PublishPostAtBlog()
+		{
+			var blog = new Blog();
+			Assert.AreEqual(0, blog.Posts.Count());
+
+			blog.NewPost()
+			    .SetTitle("Título")
+			    .SetText("Primer post")
+			    .Publish();
+			
+			Assert.AreEqual(1, blog.Posts.Count());
 		}
     }
 }
