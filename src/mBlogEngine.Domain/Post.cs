@@ -17,6 +17,11 @@
 
 		public bool Published { get; private set; }
 
+	    public string Decorated
+	    {
+		    get { return string.Format("<article><h1>{0}</h1><p>{1}</p></article>", Title, Text); }
+	    }
+
 	    public Post SetTitle(string title)
 	    {
 		    Title = title;

@@ -47,5 +47,17 @@ namespace mBlogEngine.Domain.Tests
 			Assert.AreEqual(1, blog.Posts.Count());
 			Assert.AreEqual(0, blog.PublishedPosts.Count());
 		}
+
+		[Test]
+		public void PostDecoratedByDefaultBlog()
+		{
+			var blog = new Blog();
+
+			var post = blog.NewPost()
+			               .SetTitle("Título")
+			               .SetText("Primer post");
+
+			Assert.AreEqual("<article><h1>Título</h1><p>Primer post</p></article>", post.Decorated);
+		}
 	}
 }
