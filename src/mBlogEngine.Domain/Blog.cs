@@ -7,10 +7,13 @@ namespace mBlogEngine.Domain
 	{
 		private readonly IList<Post> _posts;
 
-		public Blog()
+		public Blog(IBlogWriter blogWriter = null)
 		{
+			Writer = blogWriter ?? new BlogWriterDefault();
 			_posts = new List<Post>();
 		}
+
+		public IBlogWriter Writer { get; private set; }
 
 		public Post NewPost()
 		{

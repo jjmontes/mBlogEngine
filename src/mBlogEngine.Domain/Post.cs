@@ -19,7 +19,7 @@
 
 	    public string Decorated
 	    {
-		    get { return string.Format("<article><h1>{0}</h1><p>{1}</p></article>", Title, Text); }
+		    get { return _blog.Writer.Decorated(this); }
 	    }
 
 	    public Post SetTitle(string title)
