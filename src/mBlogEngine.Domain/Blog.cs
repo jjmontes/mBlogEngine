@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace mBlogEngine.Domain
 {
@@ -21,6 +22,11 @@ namespace mBlogEngine.Domain
 		public IEnumerable<Post> Posts 
 		{
 			get { return _posts; }
+		}
+
+		public IEnumerable<Post> PublishedPosts
+		{
+			get { return _posts.Where(p => p.Published); }
 		}
 	}
 }

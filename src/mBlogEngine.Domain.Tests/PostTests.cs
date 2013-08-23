@@ -29,8 +29,23 @@ namespace mBlogEngine.Domain.Tests
 			    .SetTitle("Título")
 			    .SetText("Primer post")
 			    .Publish();
-			
+
 			Assert.AreEqual(1, blog.Posts.Count());
+			Assert.AreEqual(1, blog.PublishedPosts.Count());
 		}
-    }
+
+		[Test]
+		public void CreatePostUnpublishedAtBlog()
+		{
+			var blog = new Blog();
+			Assert.AreEqual(0, blog.Posts.Count());
+
+			blog.NewPost()
+				.SetTitle("Título")
+				.SetText("Primer post");
+
+			Assert.AreEqual(1, blog.Posts.Count());
+			Assert.AreEqual(0, blog.PublishedPosts.Count());
+		}
+	}
 }
