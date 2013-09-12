@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Blog.cs" />
     <Compile Include="BlogWriterDefault.cs" />
+    <Compile Include="IBlogNotifier.cs" />
     <Compile Include="IBlogWriter.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

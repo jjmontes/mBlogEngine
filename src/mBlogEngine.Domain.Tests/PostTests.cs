@@ -76,5 +76,22 @@ namespace mBlogEngine.Domain.Tests
 
 			Assert.AreEqual("<div class='title'>Título</div><div class='post'>Primer post</div>", post.Decorated);
 		}
-	}
+
+		[Test]
+		public void NotifyWhenPostIsPublished()
+		{
+			var moqNotifier = new Mock<IBlogNotifier>();
+			moqNotifier.Setup(n => n.PostIsPublished(It.IsAny<Post>()));
+
+			var blog = new Blog(moqNotifier.Object);
+			Assert.AreEqual(0, blog.Posts.Count());
+
+			blog.NewPost()
+				.SetTitle("Título")
+				.SetText("Primer post")
+				.Publish();
+
+			moqNotifier.Verify(n => n.PostIsPublished(It.IsAny<Post>()), Times.Once());
+		}
+    }
 }

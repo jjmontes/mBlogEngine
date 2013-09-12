@@ -43,6 +43,10 @@
 	    public void Publish()
 	    {
 		    Published = true;
+			var notifier = _blog.Notifier();
+		    
+			if (notifier == null) return;
+			notifier.PostIsPublished(this);
 	    }
     }
 }
