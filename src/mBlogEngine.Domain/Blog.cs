@@ -5,19 +5,32 @@ namespace mBlogEngine.Domain
 {
 	public class Blog
 	{
-		private readonly IBlogNotifier _blogNotifier;
+		private readonly List<IBlogNotifier> _blogNotifiers;
 		private readonly IList<Post> _posts;
 
-		public Blog(IBlogWriter blogWriter = null)
+		public Blog()
 		{
-			Writer = blogWriter ?? new BlogWriterDefault();
+			Writer = new BlogWriterDefault();
+			_blogNotifiers = new List<IBlogNotifier>();
 			_posts = new List<Post>();
 		}
 
-		public Blog(IBlogNotifier blogNotifier)
+		public Blog(IEnumerable<IBlogNotifier> blogNotifiers)
+			: this()
 		{
-			_blogNotifier = blogNotifier;
-			_posts = new List<Post>();
+			_blogNotifiers.AddRange(blogNotifiers);
+		}
+
+		public Blog(IBlogWriter blogWriter)
+			: this()
+		{
+			Writer = blogWriter;
+		}
+
+		public Blog(IEnumerable<IBlogNotifier> blogNotifiers, IBlogWriter blogWriter)
+			: this(blogNotifiers)
+		{
+			Writer = blogWriter;
 		}
 
 		public IBlogWriter Writer { get; private set; }
@@ -29,7 +42,7 @@ namespace mBlogEngine.Domain
 			return post;
 		}
 
-		public IEnumerable<Post> Posts 
+		public IEnumerable<Post> Posts
 		{
 			get { return _posts; }
 		}
@@ -39,9 +52,9 @@ namespace mBlogEngine.Domain
 			get { return _posts.Where(p => p.Published); }
 		}
 
-		public IBlogNotifier Notifier()
+		public IEnumerable<IBlogNotifier> Notifiers
 		{
-			return _blogNotifier;
+			get { return _blogNotifiers; }
 		}
 	}
 }

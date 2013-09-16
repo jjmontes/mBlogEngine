@@ -1,4 +1,6 @@
-﻿namespace mBlogEngine.Domain
+﻿using System.Linq;
+
+namespace mBlogEngine.Domain
 {
     public class Post
     {
@@ -43,10 +45,10 @@
 	    public void Publish()
 	    {
 		    Published = true;
-			var notifier = _blog.Notifier();
-		    
-			if (notifier == null) return;
-			notifier.PostIsPublished(this);
+		    foreach (var blogNotifier in _blog.Notifiers.Where(n=>n != null))
+		    {
+				blogNotifier.PostIsPublished(this);
+		    }
 	    }
     }
 }

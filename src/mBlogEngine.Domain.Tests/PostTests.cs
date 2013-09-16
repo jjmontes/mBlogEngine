@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Moq;
 
@@ -83,7 +84,7 @@ namespace mBlogEngine.Domain.Tests
 			var moqNotifier = new Mock<IBlogNotifier>();
 			moqNotifier.Setup(n => n.PostIsPublished(It.IsAny<Post>()));
 
-			var blog = new Blog(moqNotifier.Object);
+			var blog = new Blog(new[] {moqNotifier.Object});
 			Assert.AreEqual(0, blog.Posts.Count());
 
 			blog.NewPost()
@@ -93,5 +94,25 @@ namespace mBlogEngine.Domain.Tests
 
 			moqNotifier.Verify(n => n.PostIsPublished(It.IsAny<Post>()), Times.Once());
 		}
-    }
+
+		[Test]
+		public void UseTwoBlogNotifier()
+		{
+			var moqNotifierOne = new Mock<IBlogNotifier>();
+			moqNotifierOne.Setup(n => n.PostIsPublished(It.IsAny<Post>()));
+			var moqNotifierTwo = new Mock<IBlogNotifier>();
+			moqNotifierTwo.Setup(n => n.PostIsPublished(It.IsAny<Post>()));
+
+			var blog = new Blog(new [] { moqNotifierOne.Object, moqNotifierTwo.Object});
+			Assert.AreEqual(0, blog.Posts.Count());
+
+			blog.NewPost()
+				.SetTitle("Título")
+				.SetText("Primer post")
+				.Publish();
+
+			moqNotifierOne.Verify(n => n.PostIsPublished(It.IsAny<Post>()), Times.Once());
+			moqNotifierTwo.Verify(n => n.PostIsPublished(It.IsAny<Post>()), Times.Once());
+		}
+	}
 }
