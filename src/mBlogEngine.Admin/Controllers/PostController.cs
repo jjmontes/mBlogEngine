@@ -12,5 +12,9 @@ namespace mBlogEngine.Admin.Controllers
             return View();
         }
 
+	    public ActionResult New()
+	    {
+		    return View();
+	    }
     }
 }
