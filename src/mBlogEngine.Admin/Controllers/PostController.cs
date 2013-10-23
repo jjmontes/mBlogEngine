@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
+using mBlogEngine.Admin.Models;
 
 namespace mBlogEngine.Admin.Controllers
 {
@@ -16,5 +18,13 @@ namespace mBlogEngine.Admin.Controllers
 	    {
 		    return View();
 	    }
+
+		[HttpPost]
+	    public ActionResult New(PostModel model)
+		{
+			if (ModelState.IsValid)
+				return RedirectToAction("Index");
+			return View();
+		}
     }
 }
