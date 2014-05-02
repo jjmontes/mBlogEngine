@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mBlogEngine.Domain", "mBlog
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mBlogEngine.Domain.Tests", "mBlogEngine.Domain.Tests\mBlogEngine.Domain.Tests.csproj", "{FEDD69CB-BD6F-4682-BAC9-DEAE6E445836}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mBlogEngine.Console.Tests", "mBlogEngine.Console.Tests\mBlogEngine.Console.Tests.csproj", "{6EC75C03-9392-47A3-9989-76F3D93443AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleBlogEngine", "ConsoleBlogEngine\ConsoleBlogEngine.csproj", "{3AF2F414-DB9A-434A-AA53-9A16943D2D89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{FEDD69CB-BD6F-4682-BAC9-DEAE6E445836}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEDD69CB-BD6F-4682-BAC9-DEAE6E445836}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEDD69CB-BD6F-4682-BAC9-DEAE6E445836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC75C03-9392-47A3-9989-76F3D93443AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC75C03-9392-47A3-9989-76F3D93443AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC75C03-9392-47A3-9989-76F3D93443AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC75C03-9392-47A3-9989-76F3D93443AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF2F414-DB9A-434A-AA53-9A16943D2D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF2F414-DB9A-434A-AA53-9A16943D2D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF2F414-DB9A-434A-AA53-9A16943D2D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF2F414-DB9A-434A-AA53-9A16943D2D89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
