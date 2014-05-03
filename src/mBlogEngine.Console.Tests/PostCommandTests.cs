@@ -1,4 +1,5 @@
-﻿using ConsoleBlogEngine;
+﻿using System.IO;
+using ConsoleBlogEngine;
 using NUnit.Framework;
 
 namespace mBlogEngine.Console.Tests
@@ -11,10 +12,26 @@ namespace mBlogEngine.Console.Tests
 		{
 			var command = new PublishPostCommand(ConsoleStub.WriteLine);
 
-			command.Execute("-f:post.txt");
+			File.Delete("post.txt");
+			command.Execute(new[] { "-f:post.txt" });
 
 			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
 			StringAssert.Contains("File 'post.txt' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\post.txt", ConsoleStub.Text);
+		}
+
+		[Test]
+		public void PublishPostWhenFileExist()
+		{
+			var command = new PublishPostCommand(ConsoleStub.WriteLine);
+
+			File.Delete("post.txt");
+			using (new FileStream("post.txt", FileMode.OpenOrCreate))
+			{
+			}
+			command.Execute(new[] { "-f:post.txt" });
+
+			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
+			StringAssert.Contains("Add file 'post.txt' to blog and publish it.", ConsoleStub.Text);
 		}
 	}
 }
