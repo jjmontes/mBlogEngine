@@ -23,6 +23,12 @@ namespace ConsoleBlogEngine
 				var fileName = fileArg.Substring(3);
 				if (File.Exists(fileName))
 				{
+					Directory.CreateDirectory("blog");
+					Directory.CreateDirectory(@"blog\posts\post");
+					using (File.Create(@"blog\posts\post\index.html"))
+					{
+						
+					}
 					_writer.Invoke("Add file 'post.txt' to blog and publish it.");
 				}
 				else

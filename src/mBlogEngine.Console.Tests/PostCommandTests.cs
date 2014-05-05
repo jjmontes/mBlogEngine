@@ -33,5 +33,16 @@ namespace mBlogEngine.Console.Tests
 			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
 			StringAssert.Contains("Add file 'post.txt' to blog and publish it.", ConsoleStub.Text);
 		}
+
+		[Test]
+		public void VerifyFileSystemWhenPostIsPublished()
+		{
+			if (Directory.Exists("blog"))
+				Directory.Delete("blog", true);
+			PublishPostWhenFileExist();
+
+			Assert.IsTrue(Directory.Exists("blog"));
+			Assert.IsTrue(File.Exists(@"blog\posts\post\index.html"));
+		}
 	}
 }
