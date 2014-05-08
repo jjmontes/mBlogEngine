@@ -7,13 +7,24 @@ namespace mBlogEngine.Console.Tests
 	[TestFixture]
 	public class PostCommandTests
 	{
+		private static void CreateFileToPost()
+		{
+			using (new FileStream("post.txt", FileMode.OpenOrCreate))
+			{
+			}
+		}
+
+		private static void PublishPost()
+		{
+			var command = new PublishPostCommand(ConsoleStub.WriteLine);
+			command.Execute(new[] { "-f:post.txt" });
+		}
+		
 		[Test]
 		public void PublishPostWhenFileDoesntExist()
 		{
-			var command = new PublishPostCommand(ConsoleStub.WriteLine);
-
 			File.Delete("post.txt");
-			command.Execute(new[] { "-f:post.txt" });
+			PublishPost();
 
 			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
 			StringAssert.Contains("File 'post.txt' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\post.txt", ConsoleStub.Text);
@@ -22,13 +33,9 @@ namespace mBlogEngine.Console.Tests
 		[Test]
 		public void PublishPostWhenFileExist()
 		{
-			var command = new PublishPostCommand(ConsoleStub.WriteLine);
-
 			File.Delete("post.txt");
-			using (new FileStream("post.txt", FileMode.OpenOrCreate))
-			{
-			}
-			command.Execute(new[] { "-f:post.txt" });
+			CreateFileToPost();
+			PublishPost();
 
 			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
 			StringAssert.Contains("Add file 'post.txt' to blog and publish it.", ConsoleStub.Text);
@@ -39,7 +46,8 @@ namespace mBlogEngine.Console.Tests
 		{
 			if (Directory.Exists("blog"))
 				Directory.Delete("blog", true);
-			PublishPostWhenFileExist();
+			CreateFileToPost();
+			PublishPost();
 
 			Assert.IsTrue(Directory.Exists("blog"));
 			Assert.IsTrue(File.Exists(@"blog\posts\post\index.html"));
