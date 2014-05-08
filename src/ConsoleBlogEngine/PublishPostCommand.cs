@@ -23,9 +23,14 @@ namespace ConsoleBlogEngine
 				var fileName = fileArg.Substring(3);
 				if (File.Exists(fileName))
 				{
+					var file = new FileInfo(fileName);
+					var postName = file.Name;
+					if (!string.IsNullOrWhiteSpace(file.Extension))
+						postName = postName.Substring(0, postName.Length - file.Extension.Length);
+
 					Directory.CreateDirectory("blog");
-					Directory.CreateDirectory(@"blog\posts\post");
-					using (File.Create(@"blog\posts\post\index.html"))
+					Directory.CreateDirectory(string.Format(@"blog\posts\{0}", postName));
+					using (File.Create(string.Format(@"blog\posts\{0}\index.html", postName)))
 					{
 						
 					}
