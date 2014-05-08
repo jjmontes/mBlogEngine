@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using mBlogEngine.Domain;
 
 namespace ConsoleBlogEngine
 {
@@ -24,15 +25,19 @@ namespace ConsoleBlogEngine
 				if (File.Exists(fileName))
 				{
 					var file = new FileInfo(fileName);
-					var postName = file.Name;
+					var postTitle = file.Name;
 					if (!string.IsNullOrWhiteSpace(file.Extension))
-						postName = postName.Substring(0, postName.Length - file.Extension.Length);
-
+						postTitle = postTitle.Substring(0, postTitle.Length - file.Extension.Length);
+					var postName = postTitle.Replace(' ', '-');
 					Directory.CreateDirectory("blog");
 					Directory.CreateDirectory(string.Format(@"blog\posts\{0}", postName));
-					using (File.Create(string.Format(@"blog\posts\{0}\index.html", postName)))
+					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
 					{
-						
+						using (var reader = file.OpenText())
+						{
+							var post = new Blog().NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
+							stream.Write(post.Decorated);
+						}
 					}
 					_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
 				}

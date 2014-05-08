@@ -9,8 +9,11 @@ namespace mBlogEngine.Console.Tests
 	{
 		private static void CreateFileToPost(string fileName)
 		{
-			using (new FileStream(string.Format("{0}", fileName), FileMode.OpenOrCreate))
+			using (var file = new StreamWriter(string.Format("{0}.txt", fileName)))
 			{
+				file.WriteLine("<h2>This is my first post!</h2>");
+				file.WriteLine("<p>There is a paragraph</p>");
+				file.WriteLine("<div>There is a div</div>");
 			}
 		}
 
@@ -34,7 +37,7 @@ namespace mBlogEngine.Console.Tests
 		public void PublishPostWhenFileExist()
 		{
 			File.Delete("post.txt");
-			CreateFileToPost("post.txt");
+			CreateFileToPost("post");
 			PublishPost("post.txt");
 
 			StringAssert.Contains("cbe publish -f:post.txt", ConsoleStub.Text);
@@ -46,7 +49,7 @@ namespace mBlogEngine.Console.Tests
 		{
 			if (Directory.Exists("blog"))
 				Directory.Delete("blog", true);
-			CreateFileToPost("post.txt");
+			CreateFileToPost("post");
 			PublishPost("post.txt");
 
 			Assert.IsTrue(Directory.Exists("blog"));
@@ -58,7 +61,7 @@ namespace mBlogEngine.Console.Tests
 		{
 			if (Directory.Exists("blog"))
 				Directory.Delete("blog", true);
-			CreateFileToPost("my-first-post.txt");
+			CreateFileToPost("my-first-post");
 			PublishPost("my-first-post.txt");
 
 			Assert.IsTrue(Directory.Exists("blog"));
@@ -81,11 +84,25 @@ namespace mBlogEngine.Console.Tests
 		public void PublishPostWhenFileExistAndItsNameIsNotPost()
 		{
 			File.Delete("my-first-post.txt");
-			CreateFileToPost("my-first-post.txt");
+			CreateFileToPost("my-first-post");
 			PublishPost("my-first-post.txt");
 
 			StringAssert.Contains("cbe publish -f:my-first-post.txt", ConsoleStub.Text);
 			StringAssert.Contains("Add file 'my-first-post.txt' to blog and publish it.", ConsoleStub.Text);
+		}
+
+		[Test]
+		public void PublishPostThenVerifyContent()
+		{
+			File.Delete("My First Post.txt");
+			CreateFileToPost("My First Post");
+			PublishPost("My First Post.txt");
+
+			var textPost = File.ReadAllText(@"blog\posts\my-first-post\index.html");
+			StringAssert.Contains("<h1>My First Post</h1>", textPost);
+			StringAssert.Contains("<h2>This is my first post!</h2>", textPost);
+			StringAssert.Contains("<p>There is a paragraph</p>", textPost);
+			StringAssert.Contains("<div>There is a div</div>", textPost);
 		}
 	}
 }
