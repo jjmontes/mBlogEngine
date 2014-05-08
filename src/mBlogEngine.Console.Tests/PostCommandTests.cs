@@ -64,5 +64,28 @@ namespace mBlogEngine.Console.Tests
 			Assert.IsTrue(Directory.Exists("blog"));
 			Assert.IsTrue(File.Exists(@"blog\posts\my-first-post\index.html"));
 		}
+
+		[Test]
+		public void PublishPostWhenFileDoesntExistAndItsNameIsNotPost()
+		{
+			File.Delete("my-first-post.txt");
+			PublishPost("my-first-post.txt");
+
+			StringAssert.Contains("cbe publish -f:my-first-post.txt", ConsoleStub.Text);
+			StringAssert.Contains(
+				"File 'my-first-post.txt' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\my-first-post.txt",
+				ConsoleStub.Text);
+		}
+
+		[Test]
+		public void PublishPostWhenFileExistAndItsNameIsNotPost()
+		{
+			File.Delete("my-first-post.txt");
+			CreateFileToPost("my-first-post.txt");
+			PublishPost("my-first-post.txt");
+
+			StringAssert.Contains("cbe publish -f:my-first-post.txt", ConsoleStub.Text);
+			StringAssert.Contains("Add file 'my-first-post.txt' to blog and publish it.", ConsoleStub.Text);
+		}
 	}
 }

@@ -34,11 +34,12 @@ namespace ConsoleBlogEngine
 					{
 						
 					}
-					_writer.Invoke("Add file 'post.txt' to blog and publish it.");
+					_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
 				}
 				else
 				{
-					_writer.Invoke("File 'post.txt' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\post.txt");
+					_writer.Invoke(string.Format("File '{0}' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\{0}",
+					                             fileName));
 				}
 			}
 		}
