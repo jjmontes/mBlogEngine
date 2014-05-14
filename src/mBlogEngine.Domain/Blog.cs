@@ -13,6 +13,7 @@ namespace mBlogEngine.Domain
 			Writer = new BlogWriterDefault();
 			_blogNotifiers = new List<IBlogNotifier>();
 			_posts = new List<Post>();
+			Title = string.Empty;
 		}
 
 		public Blog(IEnumerable<IBlogNotifier> blogNotifiers)
@@ -61,5 +62,7 @@ namespace mBlogEngine.Domain
 		{
 			get { return "<h1>Blog title</h1><div><h2>My First Post</h2><h5>Autor: <em>Juan Jos&eacute;</em></h5></div>"; }
 		}
+
+		public string Title { get; private set; }
 	}
 }
