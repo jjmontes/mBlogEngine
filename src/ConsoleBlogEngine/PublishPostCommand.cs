@@ -31,12 +31,22 @@ namespace ConsoleBlogEngine
 					var postName = postTitle.Replace(' ', '-');
 					Directory.CreateDirectory("blog");
 					Directory.CreateDirectory(string.Format(@"blog\posts\{0}", postName));
+					//Post file
 					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
 					{
 						using (var reader = file.OpenText())
 						{
 							var post = new Blog().NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
 							stream.Write(post.Decorated);
+						}
+					}
+					//Blog index
+					using (var stream = new StreamWriter(File.Create(@"blog\index.html")))
+					{
+						using (var reader = file.OpenText())
+						{
+							var blog = new Blog();
+							stream.Write(blog.Index);
 						}
 					}
 					_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));

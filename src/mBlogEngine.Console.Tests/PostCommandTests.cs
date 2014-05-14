@@ -92,7 +92,7 @@ namespace mBlogEngine.Console.Tests
 		}
 
 		[Test]
-		public void PublishPostThenVerifyContent()
+		public void PublishPostThenVerifyPostContent()
 		{
 			File.Delete("My First Post.txt");
 			CreateFileToPost("My First Post");
@@ -103,6 +103,22 @@ namespace mBlogEngine.Console.Tests
 			StringAssert.Contains("<h2>This is my first post!</h2>", textPost);
 			StringAssert.Contains("<p>There is a paragraph</p>", textPost);
 			StringAssert.Contains("<div>There is a div</div>", textPost);
+		}
+
+		[Test]
+		public void PublishPostThenVerifyBlogIndex()
+		{
+			File.Delete("My First Post.txt");
+			CreateFileToPost("My First Post");
+			PublishPost("My First Post.txt");
+
+			var blogIndex = new FileInfo(@"blog\index.html");
+			Assert.IsTrue(blogIndex.Exists);
+			var textBlogIndex = File.ReadAllText(@"blog\index.html");
+			StringAssert.Contains("<h1>Blog title</h1>", textBlogIndex);
+			StringAssert.Contains("<h2>My First Post</h2>", textBlogIndex);
+			StringAssert.Contains("<h5>Autor: <em>Juan Jos&eacute;</em></h5>", textBlogIndex);
+			
 		}
 	}
 }

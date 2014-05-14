@@ -56,5 +56,10 @@ namespace mBlogEngine.Domain
 		{
 			get { return _blogNotifiers; }
 		}
+
+		public string Index
+		{
+			get { return "<h1>Blog title</h1><div><h2>My First Post</h2><h5>Autor: <em>Juan Jos&eacute;</em></h5></div>"; }
+		}
 	}
 }
