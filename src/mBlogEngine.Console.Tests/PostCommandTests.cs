@@ -106,7 +106,7 @@ namespace mBlogEngine.Console.Tests
 		}
 
 		[Test]
-		public void PublishPostThenVerifyBlogIndex()
+		public void PublishPostWhenBlogIsNotConfiguredThenVerifyBlogIndex()
 		{
 			File.Delete("My First Post.txt");
 			CreateFileToPost("My First Post");
@@ -115,7 +115,7 @@ namespace mBlogEngine.Console.Tests
 			var blogIndex = new FileInfo(@"blog\index.html");
 			Assert.IsTrue(blogIndex.Exists);
 			var textBlogIndex = File.ReadAllText(@"blog\index.html");
-			StringAssert.Contains("<h1>Blog title</h1>", textBlogIndex);
+			StringAssert.Contains("<h1></h1>", textBlogIndex);
 			StringAssert.Contains("<h2>My First Post</h2>", textBlogIndex);
 			StringAssert.Contains("<h5>Autor: <em>Juan Jos&eacute;</em></h5>", textBlogIndex);
 			
