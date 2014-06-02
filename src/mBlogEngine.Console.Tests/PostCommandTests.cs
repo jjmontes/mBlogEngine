@@ -7,6 +7,12 @@ namespace mBlogEngine.Console.Tests
 	[TestFixture]
 	public class PostCommandTests
 	{
+		private static void ConfigureBlog(string blogTitle)
+		{
+			var command = new ConfigBlogCommand(ConsoleStub.WriteLine);
+			command.Execute(new[] {string.Format("-ct:{0}", blogTitle.Replace(" ", "\\ "))});
+		}
+
 		private static void CreateFileToPost(string fileName)
 		{
 			using (var file = new StreamWriter(string.Format("{0}.txt", fileName)))
@@ -109,6 +115,7 @@ namespace mBlogEngine.Console.Tests
 		public void PublishPostWhenBlogIsNotConfiguredThenVerifyBlogIndex()
 		{
 			File.Delete("My First Post.txt");
+			File.Delete("cbe.config");
 			CreateFileToPost("My First Post");
 			PublishPost("My First Post.txt");
 
@@ -119,6 +126,23 @@ namespace mBlogEngine.Console.Tests
 			StringAssert.Contains("<h2>My First Post</h2>", textBlogIndex);
 			StringAssert.Contains("<h5>Autor: <em>Juan Jos&eacute;</em></h5>", textBlogIndex);
 			
+		}
+
+		[Test]
+		public void PublishPostWhenBlogIsConfiguredThenVerifyBlogIndex()
+		{
+			File.Delete("My First Post.txt");
+			ConfigureBlog("My blog");
+			CreateFileToPost("My First Post");
+			PublishPost("My First Post.txt");
+
+			var blogIndex = new FileInfo(@"blog\index.html");
+			Assert.IsTrue(blogIndex.Exists);
+			var textBlogIndex = File.ReadAllText(@"blog\index.html");
+			StringAssert.Contains("<h1>My blog</h1>", textBlogIndex);
+			StringAssert.Contains("<h2>My First Post</h2>", textBlogIndex);
+			StringAssert.Contains("<h5>Autor: <em>Juan Jos&eacute;</em></h5>", textBlogIndex);
+
 		}
 	}
 }

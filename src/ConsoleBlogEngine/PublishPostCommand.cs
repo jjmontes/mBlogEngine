@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using mBlogEngine.Domain;
@@ -31,22 +32,31 @@ namespace ConsoleBlogEngine
 					var postName = postTitle.Replace(' ', '-');
 					Directory.CreateDirectory("blog");
 					Directory.CreateDirectory(string.Format(@"blog\posts\{0}", postName));
-					//Post file
-					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
-					{
-						using (var reader = file.OpenText())
-						{
-							var post = new Blog().NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
-							stream.Write(post.Decorated);
-						}
-					}
+
+					var config =
+						ConfigurationManager.OpenMappedExeConfiguration(new ExeConfigurationFileMap {ExeConfigFilename = "cbe.config"},
+						                                                ConfigurationUserLevel.None);
+					var titleBlog = string.Empty;
+					var configSettings = config.AppSettings.Settings;
+					if (configSettings["Blog.Title"] != null)
+						titleBlog = config.AppSettings.Settings["Blog.Title"].Value;
+					var blog = new Blog().SetTitle(titleBlog);
+
 					//Blog index
 					using (var stream = new StreamWriter(File.Create(@"blog\index.html")))
 					{
 						using (var reader = file.OpenText())
 						{
-							var blog = new Blog();
 							stream.Write(blog.Index);
+						}
+					}
+					//Post file
+					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
+					{
+						using (var reader = file.OpenText())
+						{
+							var post = blog.NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
+							stream.Write(post.Decorated);
 						}
 					}
 					_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
