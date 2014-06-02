@@ -3,6 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using mBlogEngine.Domain;
+using mBlogEngine.FileSystem;
 
 namespace ConsoleBlogEngine
 {
@@ -17,6 +18,8 @@ namespace ConsoleBlogEngine
 
 		public void Execute(string[] args)
 		{
+			//TODO: REFACTORIZAR ESTO!!!!
+			
 			_writer.Invoke(string.Format("cbe publish {0}", string.Join(" ", args)));
 
 			var fileArg = args.SingleOrDefault(a => a.ToLowerInvariant().StartsWith("-f:"));
@@ -30,9 +33,10 @@ namespace ConsoleBlogEngine
 					if (!string.IsNullOrWhiteSpace(file.Extension))
 						postTitle = postTitle.Substring(0, postTitle.Length - file.Extension.Length);
 					var postName = postTitle.Replace(' ', '-');
-					Directory.CreateDirectory("blog");
-					Directory.CreateDirectory(string.Format(@"blog\posts\{0}", postName));
 
+					var skeleton = new Skeleton();
+					skeleton.Init();
+					
 					var config =
 						ConfigurationManager.OpenMappedExeConfiguration(new ExeConfigurationFileMap {ExeConfigFilename = "cbe.config"},
 						                                                ConfigurationUserLevel.None);
@@ -51,6 +55,7 @@ namespace ConsoleBlogEngine
 						}
 					}
 					//Post file
+					skeleton.InitPost(postName);
 					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
 					{
 						using (var reader = file.OpenText())
