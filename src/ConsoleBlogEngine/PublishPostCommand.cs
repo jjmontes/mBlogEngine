@@ -18,53 +18,57 @@ namespace ConsoleBlogEngine
 
 		public void Execute(string[] args)
 		{
-			//TODO: REFACTORIZAR ESTO!!!!
-			
 			_writer.Invoke(string.Format("cbe publish {0}", string.Join(" ", args)));
 
 			var fileArg = args.SingleOrDefault(a => a.ToLowerInvariant().StartsWith("-f:"));
-			if (fileArg!= null)
+			if (fileArg == null) return;
+			var fileName = fileArg.Substring(3);
+			if (File.Exists(fileName))
 			{
-				var fileName = fileArg.Substring(3);
-				if (File.Exists(fileName))
+				var file = new FileInfo(fileName);
+				var postTitle = file.Name;
+				if (!string.IsNullOrWhiteSpace(file.Extension))
+					postTitle = postTitle.Substring(0, postTitle.Length - file.Extension.Length);
+				var postName = postTitle.Replace(' ', '-');
+
+				var skeleton = new Skeleton();
+				skeleton.Init();
+
+				var config = new ConfigBlog();
+				var titleBlog = config.Get("Blog.Title", string.Empty);
+				var blog = new Blog().SetTitle(titleBlog);
+
+				WriteBlogIndex(file, blog);
+				WriteBlogPost(skeleton, postName, file, blog, postTitle);
+				_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
+			}
+			else
+			{
+				_writer.Invoke(string.Format("File '{0}' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\{0}",
+				                             fileName));
+			}
+		}
+
+		private static void WriteBlogPost(Skeleton skeleton, string postName, FileInfo file, Blog blog, string postTitle)
+		{
+			skeleton.InitPost(postName);
+			using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
+			{
+				using (var reader = file.OpenText())
 				{
-					var file = new FileInfo(fileName);
-					var postTitle = file.Name;
-					if (!string.IsNullOrWhiteSpace(file.Extension))
-						postTitle = postTitle.Substring(0, postTitle.Length - file.Extension.Length);
-					var postName = postTitle.Replace(' ', '-');
-
-					var skeleton = new Skeleton();
-					skeleton.Init();
-
-					var config = new ConfigBlog();
-					var titleBlog = config.Get("Blog.Title", string.Empty);
-					var blog = new Blog().SetTitle(titleBlog);
-
-					//Blog index
-					using (var stream = new StreamWriter(File.Create(@"blog\index.html")))
-					{
-						using (var reader = file.OpenText())
-						{
-							stream.Write(blog.Index);
-						}
-					}
-					//Post file
-					skeleton.InitPost(postName);
-					using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
-					{
-						using (var reader = file.OpenText())
-						{
-							var post = blog.NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
-							stream.Write(post.Decorated);
-						}
-					}
-					_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
+					var post = blog.NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
+					stream.Write(post.Decorated);
 				}
-				else
+			}
+		}
+
+		private static void WriteBlogIndex(FileInfo file, Blog blog)
+		{
+			using (var stream = new StreamWriter(File.Create(@"blog\index.html")))
+			{
+				using (file.OpenText())
 				{
-					_writer.Invoke(string.Format("File '{0}' doesn't exist. Try to add path to file. Example: -f:C:\\blog\\{0}",
-					                             fileName));
+					stream.Write(blog.Index);
 				}
 			}
 		}
