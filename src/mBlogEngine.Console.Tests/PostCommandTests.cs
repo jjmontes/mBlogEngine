@@ -142,6 +142,7 @@ namespace mBlogEngine.Console.Tests
 			StringAssert.Contains("<h1>My blog</h1>", textBlogIndex);
 			StringAssert.Contains("<h2>My First Post</h2>", textBlogIndex);
 			StringAssert.Contains("<h5>Autor: <em>Juan Jos&eacute;</em></h5>", textBlogIndex);
+			StringAssert.Contains("<a href=\"posts/my-first-post/index.html\"", textBlogIndex);
 
 		}
 	}

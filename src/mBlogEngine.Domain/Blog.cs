@@ -60,7 +60,7 @@ namespace mBlogEngine.Domain
 
 		public string Index
 		{
-			get { return string.Format("<head><title>{0}</title></head><body><h1>{0}</h1><div class=\"container\"><h2>My First Post</h2><h5>Autor: <em>Juan Jos&eacute;</em></h5></div></body>", Title); }
+			get { return string.Format("<head><title>{0}</title></head><body><h1>{0}</h1><div class=\"container\"><h2>My First Post</h2><h5>Autor: <em>Juan Jos&eacute;</em></h5><a href=\"posts/my-first-post/index.html\">Read more</a></div></body>", Title); }
 		}
 
 		public string Title { get; private set; }
