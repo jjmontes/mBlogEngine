@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration;
+using mBlogEngine.Configuration;
 
 namespace ConsoleBlogEngine
 {
@@ -16,11 +16,9 @@ namespace ConsoleBlogEngine
 		{
 			_writer.Invoke("cbe config blog -t:My\\ blog");
 
-			var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			config.AppSettings.Settings.Add("Blog.Title", "My blog");
-			config.SaveAs("cbe.config", ConfigurationSaveMode.Modified);
+			var config = new ConfigBlog();
+			config.Set("Blog.Title", "My blog");
 
-			ConfigurationManager.RefreshSection("appSettings");
 			_writer.Invoke("Config blog: Title is \"My blog\".");
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
+using mBlogEngine.Configuration;
 using mBlogEngine.Domain;
 using mBlogEngine.FileSystem;
 
@@ -36,14 +36,9 @@ namespace ConsoleBlogEngine
 
 					var skeleton = new Skeleton();
 					skeleton.Init();
-					
-					var config =
-						ConfigurationManager.OpenMappedExeConfiguration(new ExeConfigurationFileMap {ExeConfigFilename = "cbe.config"},
-						                                                ConfigurationUserLevel.None);
-					var titleBlog = string.Empty;
-					var configSettings = config.AppSettings.Settings;
-					if (configSettings["Blog.Title"] != null)
-						titleBlog = config.AppSettings.Settings["Blog.Title"].Value;
+
+					var config = new ConfigBlog();
+					var titleBlog = config.Get("Blog.Title", string.Empty);
 					var blog = new Blog().SetTitle(titleBlog);
 
 					//Blog index
