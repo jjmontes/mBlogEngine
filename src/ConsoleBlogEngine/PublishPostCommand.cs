@@ -35,11 +35,10 @@ namespace ConsoleBlogEngine
 				skeleton.Init();
 
 				var config = new ConfigBlog();
-				var titleBlog = config.Get("Blog.Title", string.Empty);
-				var blog = new Blog().SetTitle(titleBlog);
-
+				Blog blog;
+				InitBlog(config, out blog);
+				WriteBlogPost(skeleton, config, postName, file, blog, postTitle);
 				WriteBlogIndex(file, blog);
-				WriteBlogPost(skeleton, postName, file, blog, postTitle);
 				_writer.Invoke(string.Format("Add file '{0}' to blog and publish it.", fileName));
 			}
 			else
@@ -49,7 +48,28 @@ namespace ConsoleBlogEngine
 			}
 		}
 
-		private static void WriteBlogPost(Skeleton skeleton, string postName, FileInfo file, Blog blog, string postTitle)
+		private static void InitBlog(ConfigBlog config, out Blog blog)
+		{
+			var titleBlog = config.Get("Blog.Title", string.Empty);
+			blog = new Blog().SetTitle(titleBlog);
+
+			var dir = new DirectoryInfo(@"blog\posts");
+			foreach (var file in dir.GetFiles("index.html", SearchOption.AllDirectories))
+			{
+				string textFile;
+				using (var stream = file.OpenText())
+				{
+					textFile = stream.ReadToEnd();
+				}
+				var startTitle = textFile.IndexOf("<h1>", StringComparison.InvariantCultureIgnoreCase) + 4;
+				var lengthTitle = textFile.IndexOf("</h1>", StringComparison.InvariantCultureIgnoreCase) - startTitle;
+				var title = textFile.Substring(startTitle, lengthTitle);
+				blog.NewPost().SetTitle(title).Publish();
+			}
+			
+		}
+
+		private static void WriteBlogPost(Skeleton skeleton, ConfigBlog config, string postName, FileInfo file, Blog blog, string postTitle)
 		{
 			skeleton.InitPost(postName);
 			using (var stream = new StreamWriter(File.Create(string.Format(@"blog\posts\{0}\index.html", postName))))
@@ -57,6 +77,7 @@ namespace ConsoleBlogEngine
 				using (var reader = file.OpenText())
 				{
 					var post = blog.NewPost().SetTitle(postTitle).SetText(reader.ReadToEnd());
+					post.Publish();
 					stream.Write(post.Decorated);
 				}
 			}

@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Globalization;
 
 namespace mBlogEngine.Configuration
 {
@@ -19,14 +20,32 @@ namespace mBlogEngine.Configuration
 			return setting == null ? defaultValue : setting.Value;
 		}
 
+		public int Get(string key, int defaultValue = 0)
+		{
+			int value;
+			var setting = _manager.AppSettings.Settings[key];
+
+			if (setting == null)
+				value = defaultValue;
+			else
+				int.TryParse(setting.Value, out value);
+
+			return value;
+		}
+
 		public void Set(string key, string value)
 		{
-			if (Get(key) == null)
-				_manager.AppSettings.Settings.Add("Blog.Title", "My blog");
+			if (Get(key, null) == null)
+				_manager.AppSettings.Settings.Add(key, value);
 			else
-				_manager.AppSettings.Settings["Blog.Title"].Value = "My blog";
+				_manager.AppSettings.Settings[key].Value = value;
 			_manager.Save(ConfigurationSaveMode.Modified);
 			ConfigurationManager.RefreshSection("appSettings");
+		}
+
+		public void Set(string key, int value)
+		{
+			Set(key, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 }
