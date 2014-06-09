@@ -16,10 +16,11 @@ namespace mBlogEngine.Domain.Tests
 		public void IndexPageWhenIsNewBlog()
 		{
 			var blog = new Blog();
-			StringAssert.Contains("<title></title>", blog.Index);
-			StringAssert.Contains("<body>", blog.Index);
-			StringAssert.Contains("</body>", blog.Index);
-			StringAssert.Contains("<div class=\"container\">", blog.Index);
+			var index = blog.Pages.Get("Index");
+			StringAssert.Contains("<title></title>", index.Text);
+			StringAssert.Contains("<body>", index.Text);
+			StringAssert.Contains("</body>", index.Text);
+			StringAssert.Contains("<div class=\"container\">", index.Text);
 		}
 	}
 }

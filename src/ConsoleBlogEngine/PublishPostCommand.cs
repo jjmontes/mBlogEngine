@@ -89,7 +89,7 @@ namespace ConsoleBlogEngine
 			{
 				using (file.OpenText())
 				{
-					stream.Write(blog.Index);
+					stream.Write(blog.Pages.Get("Index").Text);
 				}
 			}
 		}

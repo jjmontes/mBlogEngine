@@ -14,6 +14,7 @@ namespace mBlogEngine.Domain
 			_blogNotifiers = new List<IBlogNotifier>();
 			_posts = new List<Post>();
 			Title = string.Empty;
+			Pages = new Pages(this);
 		}
 
 		public Blog(IEnumerable<IBlogNotifier> blogNotifiers)
@@ -58,25 +59,9 @@ namespace mBlogEngine.Domain
 			get { return _blogNotifiers; }
 		}
 
-		public string Index
-		{
-			get
-			{
-				var head = string.Format("<head><title>{0}</title></head>", Title);
-				var posts = "";
-
-				foreach (var post in PublishedPosts)
-				{
-					posts += "<div class=\"col-md-4\"><h2>" + post.Title +
-					         "</h2><h5>Autor: <em>Juan Jos&eacute;</em></h5><a href=\"posts/" +
-					         post.Title.ToLowerInvariant().Replace(" ", "-") + "/index.html\">Read more</a></div>";
-				}
-
-				return string.Format(head + "<body><h1>{0}</h1><div class=\"container\">" + posts + "</div></body>", Title);				 
-			}
-		}
-
 		public string Title { get; private set; }
+
+		public Pages Pages { get; private set; }
 
 		public Blog SetTitle(string title)
 		{

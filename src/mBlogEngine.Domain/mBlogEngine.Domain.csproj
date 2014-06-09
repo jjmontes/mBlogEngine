@@ -43,6 +43,9 @@
     <Compile Include="BlogWriterDefault.cs" />
     <Compile Include="IBlogNotifier.cs" />
     <Compile Include="IBlogWriter.cs" />
+    <Compile Include="Index.cs" />
+    <Compile Include="Page.cs" />
+    <Compile Include="Pages.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
